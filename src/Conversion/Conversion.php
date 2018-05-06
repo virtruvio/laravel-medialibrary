@@ -232,19 +232,21 @@ class Conversion
     }
 
     /*
-     * Get the extension that the result of this conversion must have.
-     */
+    * Get the extension that the result of this conversion must have.
+    */
     public function getResultExtension(string $originalFileExtension = ''): string
     {
-        if ($this->shouldKeepOriginalImageFormat()) {
-            return $originalFileExtension;
-        }
 
-        if ($manipulationArgument = $this->manipulations->getManipulationArgument('format')) {
-            return $manipulationArgument;
-        }
-
+      $supportedFormats = ['jpg', 'pjpg', 'png', 'gif'];
+      if ($this->shouldKeepOriginalImageFormat() && in_array($originalFileExtension, $supportedFormats)) {
         return $originalFileExtension;
+      }
+
+      if ($manipulationArgument = $this->manipulations->getManipulationArgument('format')) {
+        return $manipulationArgument;
+      }
+
+      return 'jpg';
     }
 
     public function getConversionFile(string $file): string
