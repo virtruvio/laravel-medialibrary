@@ -47,12 +47,12 @@ class ResponsiveImageGenerator
         );
 
         foreach ($this->widthCalculator->calculateWidthsFromFile($baseImage) as $width) {
-            $this->generateResponsiveImage($media, $baseImage, 'medialibrary_original', $width, $temporaryDirectory);
+            $this->generateResponsiveImage($media, $baseImage, 'ml_bri', $width, $temporaryDirectory);
         }
 
         event(new ResponsiveImagesGenerated($media));
 
-        $this->generateTinyJpg($media, $baseImage, 'medialibrary_original', $temporaryDirectory);
+        $this->generateTinyJpg($media, $baseImage, 'ml_bri', $temporaryDirectory);
 
         $temporaryDirectory->delete();
     }

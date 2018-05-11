@@ -17,9 +17,9 @@ class ResponsiveImageTest extends TestCase
         $media = $this->testModelWithResponsiveImages->getFirstMedia();
 
         $this->assertEquals([
-            '/media/1/responsive-images/test___medialibrary_original_340_280.jpg',
-            '/media/1/responsive-images/test___medialibrary_original_284_233.jpg',
-            '/media/1/responsive-images/test___medialibrary_original_237_195.jpg',
+            '/media/1/responsive-images/test___ml_bri_340_280.jpg',
+            '/media/1/responsive-images/test___ml_bri_284_233.jpg',
+            '/media/1/responsive-images/test___ml_bri_237_195.jpg',
         ], $media->getResponsiveImageUrls());
 
         $this->assertEquals([
@@ -40,7 +40,7 @@ class ResponsiveImageTest extends TestCase
         $media = $this->testModelWithResponsiveImages->getFirstMedia();
 
         $this->assertContains(
-            '/media/1/responsive-images/test___medialibrary_original_340_280.jpg 340w, /media/1/responsive-images/test___medialibrary_original_284_233.jpg 284w, /media/1/responsive-images/test___medialibrary_original_237_195.jpg 237w',
+            '/media/1/responsive-images/test___ml_bri_340_280.jpg 340w, /media/1/responsive-images/test___ml_bri_284_233.jpg 284w, /media/1/responsive-images/test___ml_bri_237_195.jpg 237w',
              $media->getSrcset()
         );
         $this->assertContains('data:image/svg+xml;base64', $media->getSrcset());
@@ -64,7 +64,7 @@ class ResponsiveImageTest extends TestCase
 
         $responsiveImage = $media->responsiveImages()->files->first();
 
-        $this->assertEquals('medialibrary_original', $responsiveImage->generatedFor());
+        $this->assertEquals('ml_bri', $responsiveImage->generatedFor());
 
         $this->assertEquals(340, $responsiveImage->width());
 

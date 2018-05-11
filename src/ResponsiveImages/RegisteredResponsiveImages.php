@@ -20,7 +20,7 @@ class RegisteredResponsiveImages
         $this->media = $media;
 
         $this->generatedFor = $conversionName === ''
-            ? 'medialibrary_original'
+            ? 'ml_bri'
             : $conversionName;
 
         $this->files = collect($media->responsive_images[$this->generatedFor]['urls'] ?? [])

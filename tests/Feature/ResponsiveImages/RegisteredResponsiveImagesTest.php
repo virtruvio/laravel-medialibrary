@@ -18,10 +18,10 @@ class RegisteredResponsiveImagesTest extends TestCase
         $media = $this->testModel->getFirstMedia();
 
         $this->assertEquals([
-            'test___medialibrary_original_340_280.jpg',
-            'test___medialibrary_original_284_233.jpg',
-            'test___medialibrary_original_237_195.jpg',
-        ], $media->responsive_images['medialibrary_original']['urls']);
+            'test___ml_bri_340_280.jpg',
+            'test___ml_bri_284_233.jpg',
+            'test___ml_bri_237_195.jpg',
+        ], $media->responsive_images['ml_bri']['urls']);
     }
 
     /** @test */
@@ -36,7 +36,7 @@ class RegisteredResponsiveImagesTest extends TestCase
 
         $responsiveImages = $media->responsive_images;
 
-        unset($responsiveImages['medialibrary_original']['base64svg']);
+        unset($responsiveImages['ml_bri']['base64svg']);
 
         $media->responsive_images = $responsiveImages;
 

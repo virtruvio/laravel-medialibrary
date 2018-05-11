@@ -134,7 +134,7 @@ class CleanCommand extends Command
             ->map(function (Conversion $conversion) {
                 return $conversion->getName();
             })
-            ->push('medialibrary_original');
+            ->push('ml_bri');
 
         $responsiveImagesGeneratedFor = array_keys($media->responsive_images);
 
