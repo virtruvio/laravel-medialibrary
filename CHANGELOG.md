@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-medialibrary` will be documented in this file
 
+## 7.3.8 - 2018-05-15
+
+- fix `ids` option of `RegenerateCommand`
+
+## 7.3.7 - 2018-05-15
+
+- bugfix around responsive images
+
+## 7.3.6 - 2018-05-15
+
+- add support from `webp`
+
 ## 7.3.5 - 2018-05-08
 
 - fix bug where `addMediaFromUrl` would not work if the file contained a space
