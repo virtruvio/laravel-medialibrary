@@ -44,11 +44,18 @@ class RegisteredResponsiveImages
 
     public function getSrcset(): string
     {
-        $filesSrcset = $this->files
-            ->map(function (ResponsiveImage $responsiveImage) {
-                return "{$responsiveImage->url()} {$responsiveImage->width()}w";
-            })
-            ->implode(', ');
+      $filesSrcset = $this->files
+          ->map(function (ResponsiveImage $responsiveImage) {
+            if ($this->media->hasCustomProperty('custom.art.'.$responsiveImage->width() ))
+            {
+              $customUrl = $this->media->getUrl(). $this->media->getCustomProperty('custom.art.'.                  $responsiveImage->width().'.qS');
+              $customUrl = str_replace('storage','xstorm', $customUrl);
+              return "{$customUrl} {$responsiveImage->width()}w";
+            } else {
+              return "{$responsiveImage->url()} {$responsiveImage->width()}w";
+            }
+          })
+          ->implode(', ');
 
         $shouldAddPlaceholderSvg = config('medialibrary.responsive_images.use_tiny_placeholders')
             && $this->getPlaceholderSvg();
