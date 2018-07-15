@@ -269,7 +269,7 @@ class Media extends Model implements Responsable, Htmlable
      */
     public function img($conversion = '',
       array $extraAttributes = [],
-      string $injectVersion='responsiveImageWithPlaceholder'): string
+      string $injectVersion): string
     {
         if (! (new Image())->canHandleMime($this->mime_type)) {
             return '';
