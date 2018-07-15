@@ -256,9 +256,9 @@ class Media extends Model implements Responsable, Htmlable
         return $this->responsiveImages($conversionName)->getSrcset();
     }
 
-    public function toHtml(string $injectVersion = 'responsiveImageWithPlaceholder')
+    public function toHtml()
     {
-        return $this->img($injectVersion);
+        return $this->img();
     }
 
     /**
@@ -267,9 +267,7 @@ class Media extends Model implements Responsable, Htmlable
      *
      * @return string
      */
-    public function img($conversion = '',
-      array $extraAttributes = [],
-      string $injectVersion): string
+    public function img($conversion = '', array $extraAttributes = []): string
     {
         if (! (new Image())->canHandleMime($this->mime_type)) {
             return '';
@@ -301,11 +299,9 @@ class Media extends Model implements Responsable, Htmlable
         $width = '';
 
         if ($this->hasResponsiveImages($conversion)) {
-            // $viewName = config('medialibrary.responsive_images.use_tiny_placeholders')
-            //     ? 'responsiveImageWithPlaceholder'
-            //     : 'responsiveImage';
-
-            $viewName = $injectVersion;
+            $viewName = config('medialibrary.responsive_images.use_tiny_placeholders')
+                ? 'responsiveImageWithPlaceholder'
+                : 'responsiveImage';
 
             $width = $this->responsiveImages($conversion)->files->first()->width();
         }
