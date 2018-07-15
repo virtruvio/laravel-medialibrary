@@ -258,7 +258,7 @@ class Media extends Model implements Responsable, Htmlable
 
     public function toHtml(string $injectVersion = 'responsiveImageWithPlaceholder')
     {
-        return $this->img('',[],$injectVersion);
+        return $this->img($injectVersion);
     }
 
     /**
