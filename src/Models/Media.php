@@ -262,12 +262,23 @@ class Media extends Model implements Responsable, Htmlable
     }
 
     /**
+    * @param string $viewFile
+    *
+    * @return string
+    */
+    public function toEmbed(String $viewFile) {
+      return $this->img('', [], $viewFile);
+    }
+
+    /**
      * @param string|array $conversion
      * @param array $extraAttributes
      *
      * @return string
      */
-    public function img($conversion = '', array $extraAttributes = []): string
+    public function img($conversion = '',
+      array $extraAttributes = [],
+      $viewFile = 'responsiveImageWithPlaceholder'): string
     {
         if (! (new Image())->canHandleMime($this->mime_type)) {
             return '';
@@ -299,9 +310,11 @@ class Media extends Model implements Responsable, Htmlable
         $width = '';
 
         if ($this->hasResponsiveImages($conversion)) {
-            $viewName = config('medialibrary.responsive_images.use_tiny_placeholders')
-                ? 'responsiveImageWithPlaceholder'
-                : 'responsiveImage';
+            // $viewName = config('medialibrary.responsive_images.use_tiny_placeholders')
+            //     ? 'responsiveImageWithPlaceholder'
+            //     : 'responsiveImage';
+
+            $viewName = $viewFile;
 
             $width = $this->responsiveImages($conversion)->files->first()->width();
         }
