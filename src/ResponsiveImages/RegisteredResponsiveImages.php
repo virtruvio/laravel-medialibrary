@@ -48,7 +48,7 @@ class RegisteredResponsiveImages
           ->map(function (ResponsiveImage $responsiveImage) {
             if ($this->media->hasCustomProperty('custom.art.'.$responsiveImage->width().'.active'))
             {
-              $customUrl = $this->media->getUrl(). $this->media->getCustomProperty('custom.art.'.                  $responsiveImage->width().'.qS');
+              $customUrl = $this->media->getUrl(). $this->media->getCustomProperty('custom.art.'.$responsiveImage->width().'.qS');
               $customUrl = str_replace('storage','xstorm', $customUrl);
               return "{$customUrl} {$responsiveImage->width()}w";
             } else {
