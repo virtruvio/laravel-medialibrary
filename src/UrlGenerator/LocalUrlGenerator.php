@@ -48,8 +48,14 @@ class LocalUrlGenerator extends BaseUrlGenerator
 
     protected function getBaseMediaDirectoryUrl(): string
     {
-        if ($diskUrl = $this->config->get("filesystems.disks.{$this->media->disk}.url")) {
+        if (Auth::check()) {
+          if ($diskUrl = $this->config->get("filesystems.disks.{$this->media->disk}.url")) {
             return str_replace(url('/'), '', $diskUrl);
+          }
+        } else {
+          if ($diskUrl = $this->config-get('filesystems.disks.cloudfront.url')) {
+            return str_replace(url('/'), '', $diskUrl);
+          }
         }
 
         if (! starts_with($this->getStoragePath(), public_path())) {
