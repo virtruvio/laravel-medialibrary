@@ -54,7 +54,7 @@ class LocalUrlGenerator extends BaseUrlGenerator
             return str_replace(url('/'), '', $diskUrl);
           }
         } else {
-          if ($diskUrl = $this->config-get('filesystems.disks.cloudfront.url')) {
+          if ($diskUrl = $this->config->get('filesystems.disks.cloudfront.url')) {
             return str_replace(url('/'), '', $diskUrl);
           }
         }
