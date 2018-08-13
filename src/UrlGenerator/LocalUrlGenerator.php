@@ -2,6 +2,7 @@
 
 namespace Spatie\MediaLibrary\UrlGenerator;
 
+use Auth;
 use DateTimeInterface;
 use Spatie\MediaLibrary\Exceptions\UrlCannotBeDetermined;
 
