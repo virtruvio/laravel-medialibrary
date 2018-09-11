@@ -49,7 +49,7 @@ class LocalUrlGenerator extends BaseUrlGenerator
 
     protected function getBaseMediaDirectoryUrl(): string
     {
-        if (Auth::check()) {
+        if (Auth::check() || app()->runningInConsole()) {
           if ($diskUrl = $this->config->get("filesystems.disks.{$this->media->disk}.url")) {
             return str_replace(url('/'), '', $diskUrl);
           }
