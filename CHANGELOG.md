@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-medialibrary` will be documented in this file
 
+## 7.5.2 - 2018-10-19
+
+- fix for issue #1277
+
+## 7.5.1 - 2018-09-17
+
+- fix support for Lumen
+
 ## 7.5.0 - 2018-09-10
 
 - add rate limiting to clean command
