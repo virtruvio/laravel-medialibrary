@@ -10,7 +10,7 @@ class ToHtmlTest extends TestCase
 {
     use MatchesSnapshots;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -102,8 +102,8 @@ class ToHtmlTest extends TestCase
 
         $image = $media->refresh()->img('thumb');
 
-        $this->assertContains('/media/2/responsive-images/', $image);
-        $this->assertContains('data:image/svg+xml;base64,', $image);
+        $this->assertStringContainsString('/media/2/responsive-images/', $image);
+        $this->assertStringContainsString('data:image/svg+xml;base64,', $image);
     }
 
     /** @test */
@@ -118,6 +118,6 @@ class ToHtmlTest extends TestCase
 
         $imgTag = $media->refresh()->img();
 
-        $this->assertEquals('<img srcset="/media/2/responsive-images/test___ml_bri_340_280.jpg 340w, /media/2/responsive-images/test___ml_bri_284_233.jpg 284w, /media/2/responsive-images/test___ml_bri_237_195.jpg 237w" src="/media/2/test.jpg" width="340">', $imgTag);
+        $this->assertEquals('<img srcset="http://localhost/media/2/responsive-images/test___medialibrary_original_340_280.jpg 340w, http://localhost/media/2/responsive-images/test___medialibrary_original_284_233.jpg 284w, http://localhost/media/2/responsive-images/test___medialibrary_original_237_195.jpg 237w" src="/media/2/test.jpg" width="340">', $imgTag);
     }
 }

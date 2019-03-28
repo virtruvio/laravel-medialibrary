@@ -17,13 +17,13 @@ class ResponsiveImageTest extends TestCase
         $media = $this->testModelWithResponsiveImages->getFirstMedia();
 
         $this->assertEquals([
-            '/media/1/responsive-images/test___ml_bri_340_280.jpg',
-            '/media/1/responsive-images/test___ml_bri_284_233.jpg',
-            '/media/1/responsive-images/test___ml_bri_237_195.jpg',
+            'http://localhost/media/1/responsive-images/test___medialibrary_original_340_280.jpg',
+            'http://localhost/media/1/responsive-images/test___medialibrary_original_284_233.jpg',
+            'http://localhost/media/1/responsive-images/test___medialibrary_original_237_195.jpg',
         ], $media->getResponsiveImageUrls());
 
         $this->assertEquals([
-            '/media/1/responsive-images/test___thumb_50_41.jpg',
+            'http://localhost/media/1/responsive-images/test___thumb_50_41.jpg',
         ], $media->getResponsiveImageUrls('thumb'));
 
         $this->assertEquals([], $media->getResponsiveImageUrls('non-existing-conversion'));
@@ -39,17 +39,17 @@ class ResponsiveImageTest extends TestCase
 
         $media = $this->testModelWithResponsiveImages->getFirstMedia();
 
-        $this->assertContains(
-            '/media/1/responsive-images/test___ml_bri_340_280.jpg 340w, /media/1/responsive-images/test___ml_bri_284_233.jpg 284w, /media/1/responsive-images/test___ml_bri_237_195.jpg 237w',
+        $this->assertStringContainsString(
+            'http://localhost/media/1/responsive-images/test___medialibrary_original_340_280.jpg 340w, http://localhost/media/1/responsive-images/test___medialibrary_original_284_233.jpg 284w, http://localhost/media/1/responsive-images/test___medialibrary_original_237_195.jpg 237w',
              $media->getSrcset()
         );
-        $this->assertContains('data:image/svg+xml;base64', $media->getSrcset());
+        $this->assertStringContainsString('data:image/svg+xml;base64', $media->getSrcset());
 
-        $this->assertContains(
-            '/media/1/responsive-images/test___thumb_50_41.jpg 50w',
+        $this->assertStringContainsString(
+            'http://localhost/media/1/responsive-images/test___thumb_50_41.jpg 50w',
              $media->getSrcset('thumb')
         );
-        $this->assertContains('data:image/svg+xml;base64,', $media->getSrcset('thumb'));
+        $this->assertStringContainsString('data:image/svg+xml;base64,', $media->getSrcset('thumb'));
     }
 
     /** @test */
@@ -64,7 +64,7 @@ class ResponsiveImageTest extends TestCase
 
         $responsiveImage = $media->responsiveImages()->files->first();
 
-        $this->assertEquals('ml_bri', $responsiveImage->generatedFor());
+        $this->assertEquals('medialibrary_original', $responsiveImage->generatedFor());
 
         $this->assertEquals(340, $responsiveImage->width());
 

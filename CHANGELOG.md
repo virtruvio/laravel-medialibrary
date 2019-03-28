@@ -2,6 +2,27 @@
 
 All notable changes to `laravel-medialibrary` will be documented in this file
 
+## 7.6.0 - 2019-02-27
+
+- drop support for PHP 7.1
+
+## 7.5.6 - 2019-02-19
+
+- add support for Laravel 5.8
+
+## 7.5.5 - 2019-01-05
+
+- avoid exception when getting a video frame that does not exist
+
+## 7.5.4 - 2019-01-04
+
+- only set `custom_headers` property if explicitly set
+
+## 7.5.3 - 2019-01-03
+
+- use absolute urls for responsive image sources
+- fix sortable
+
 ## 7.5.2 - 2018-10-19
 
 - fix for issue #1277
