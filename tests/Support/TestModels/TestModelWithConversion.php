@@ -9,6 +9,7 @@ class TestModelWithConversion extends TestModel
     /**
      * Register the conversions that should be performed.
      *
+     * @param Media|null $media
      * @return array
      */
     public function registerMediaConversions(Media $media = null)

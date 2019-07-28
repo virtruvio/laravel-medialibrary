@@ -2,6 +2,7 @@
 
 namespace Spatie\MediaLibrary\Commands;
 
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Spatie\MediaLibrary\Models\Media;
 use Illuminate\Console\ConfirmableTrait;
@@ -171,8 +172,11 @@ class CleanCommand extends Command
         if (is_null(config("filesystems.disks.{$diskName}"))) {
             throw FileCannotBeAdded::diskDoesNotExist($diskName);
         }
+        $mediaClass = config('medialibrary.media_model');
+        $mediaInstance = new $mediaClass();
+        $keyName = $mediaInstance->getKeyName();
 
-        $mediaIds = collect($this->mediaRepository->all()->pluck('id')->toArray());
+        $mediaIds = collect($this->mediaRepository->all()->pluck($keyName)->toArray());
 
         collect($this->fileSystem->disk($diskName)->directories())
             ->filter(function (string $directory) {
@@ -201,7 +205,7 @@ class CleanCommand extends Command
 
         $media->getGeneratedConversions()
             ->filter(function (bool $isGenerated, string $generatedConversionName) use ($conversionFile) {
-                return str_contains($conversionFile, $generatedConversionName);
+                return Str::contains($conversionFile, $generatedConversionName);
             })
             ->each(function (bool $isGenerated, string $generatedConversionName) use ($media) {
                 $media->markAsConversionGenerated($generatedConversionName, false);

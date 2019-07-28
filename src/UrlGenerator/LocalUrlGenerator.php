@@ -4,6 +4,7 @@ namespace Spatie\MediaLibrary\UrlGenerator;
 
 use Auth;
 use DateTimeInterface;
+use Illuminate\Support\Str;
 use Spatie\MediaLibrary\Exceptions\UrlCannotBeDetermined;
 
 class LocalUrlGenerator extends BaseUrlGenerator
@@ -59,7 +60,7 @@ class LocalUrlGenerator extends BaseUrlGenerator
           }
         }
 
-        if (! starts_with($this->getStoragePath(), public_path())) {
+        if (! Str::startsWith($this->getStoragePath(), public_path())) {
             throw UrlCannotBeDetermined::mediaNotPubliclyAvailable($this->getStoragePath(), public_path());
         }
 

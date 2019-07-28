@@ -20,16 +20,21 @@ class PerformConversions implements ShouldQueue
     /** @var \Spatie\MediaLibrary\Models\Media */
     protected $media;
 
-    public function __construct(ConversionCollection $conversions, Media $media)
+    /** @var bool */
+    protected $onlyMissing;
+
+    public function __construct(ConversionCollection $conversions, Media $media, $onlyMissing = false)
     {
         $this->conversions = $conversions;
 
         $this->media = $media;
+
+        $this->onlyMissing = $onlyMissing;
     }
 
     public function handle(): bool
     {
-        app(FileManipulator::class)->performConversions($this->conversions, $this->media);
+        app(FileManipulator::class)->performConversions($this->conversions, $this->media, $this->onlyMissing);
 
         return true;
     }

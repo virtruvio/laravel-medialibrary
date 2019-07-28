@@ -285,7 +285,7 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_can_add_a_remote_file_to_the_medialibrary()
     {
-        $url = 'https://docs.spatie.be/images/medialibrary/header.jpg';
+        $url = 'https://docs.spatie.be/laravel-medialibrary/v7/images/header.jpg';
 
         $media = $this->testModel
             ->addMediaFromUrl($url)
@@ -298,6 +298,8 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_can_add_a_remote_file_with_the_name_of_the_last_directory_to_the_medialibrary()
     {
+        $this->markTestSkipped('Find a different way to implement the url.');
+
         $url = 'https://docs.spatie.be/laravel-medialibrary/test-image';
 
         $media = $this->testModel
@@ -310,6 +312,8 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_can_add_a_remote_file_with_no_name_or_directory_to_the_medialibrary()
     {
+        $this->markTestSkipped('Find a different way to implement the url.');
+
         $url = 'https://docs.spatie.be/?test-image=true';
 
         $media = $this->testModel
@@ -346,7 +350,7 @@ class IntegrationTest extends TestCase
     /** @test */
     public function it_wil_throw_an_exception_when_a_remote_file_has_an_invalid_mime_type()
     {
-        $url = 'https://docs.spatie.be/images/medialibrary/header.jpg';
+        $url = 'https://docs.spatie.be/laravel-medialibrary/v7/images/header.jpg';
 
         $this->expectException(MimeTypeNotAllowed::class);
 
@@ -561,5 +565,29 @@ class IntegrationTest extends TestCase
         $media = $this->testUnsavedModel->getMedia();
 
         $this->assertCount(2, $media);
+    }
+
+    /** @test */
+    public function it_can_add_an_upload_to_the_medialibrary_using_dot_notation()
+    {
+        $this->app['router']->get('/upload', function () {
+            $media = $this->testModel
+                ->addMediaFromRequest('file.name')
+                ->toMediaCollection();
+
+            $this->assertEquals('alternativename', $media->name);
+            $this->assertFileExists($this->getMediaDirectory($media->id.'/'.$media->file_name));
+        });
+
+        $fileUpload = new UploadedFile(
+            $this->getTestFilesDirectory('test.jpg'),
+            'alternativename.jpg',
+            'image/jpeg',
+            filesize($this->getTestFilesDirectory('test.jpg'))
+        );
+
+        $result = $this->call('get', 'upload', [], [], ['file' => ['name'=>$fileUpload]]);
+
+        $this->assertEquals(200, $result->getStatusCode());
     }
 }

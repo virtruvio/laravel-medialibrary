@@ -4,6 +4,8 @@ namespace Spatie\MediaLibrary\HasMedia;
 
 use DateTimeInterface;
 use Illuminate\Http\File;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\Models\Media;
 use Spatie\MediaLibrary\MediaRepository;
@@ -22,10 +24,10 @@ use Spatie\MediaLibrary\Exceptions\FileCannotBeAdded\MimeTypeNotAllowed;
 
 trait HasMediaTrait
 {
-    /** @var array */
+    /** @var Conversion[] */
     public $mediaConversions = [];
 
-    /** @var array */
+    /** @var MediaCollection[] */
     public $mediaCollections = [];
 
     /** @var bool */
@@ -137,7 +139,7 @@ trait HasMediaTrait
 
         $mediaExtension = explode('/', mime_content_type($temporaryFile));
 
-        if (! str_contains($filename, '.')) {
+        if (! Str::contains($filename, '.')) {
             $filename = "{$filename}.{$mediaExtension[1]}";
         }
 
@@ -239,7 +241,7 @@ trait HasMediaTrait
         $media = $this->getFirstMedia($collectionName);
 
         if (! $media) {
-            return '';
+            return $this->getFallbackMediaUrl($collectionName) ?: '';
         }
 
         return $media->getUrl($conversionName);
@@ -248,6 +250,7 @@ trait HasMediaTrait
     /*
      * Get the url of the image for the given conversionName
      * for first media for the given collectionName.
+     *
      * If no profile is given, return the source's url.
      */
     public function getFirstTemporaryUrl(DateTimeInterface $expiration, string $collectionName = 'default', string $conversionName = ''): string
@@ -255,10 +258,30 @@ trait HasMediaTrait
         $media = $this->getFirstMedia($collectionName);
 
         if (! $media) {
-            return '';
+            return $this->getFallbackMediaUrl($collectionName) ?: '';
         }
 
         return $media->getTemporaryUrl($expiration, $conversionName);
+    }
+
+    public function getMediaCollection(string $collectionName = 'default'): ?MediaCollection
+    {
+        $this->registerMediaCollections();
+
+        return collect($this->mediaCollections)
+            ->first(function (MediaCollection $collection) use ($collectionName) {
+                return $collection->name === $collectionName;
+            });
+    }
+
+    public function getFallbackMediaUrl(string $collectionName = 'default')
+    {
+        return optional($this->getMediaCollection($collectionName))->fallbackUrl;
+    }
+
+    public function getFallbackMediaPath(string $collectionName = 'default'): string
+    {
+        return optional($this->getMediaCollection($collectionName))->fallbackPath;
     }
 
     /*
@@ -271,7 +294,7 @@ trait HasMediaTrait
         $media = $this->getFirstMedia($collectionName);
 
         if (! $media) {
-            return '';
+            return $this->getFallbackMediaPath($collectionName) ?: '';
         }
 
         return $media->getPath($conversionName);
@@ -291,12 +314,15 @@ trait HasMediaTrait
     {
         $this->removeMediaItemsNotPresentInArray($newMediaArray, $collectionName);
 
+        $mediaClass = config('medialibrary.media_model');
+        $mediaInstance = new $mediaClass();
+        $keyName = $mediaInstance->getKeyName();
+
         return collect($newMediaArray)
-            ->map(function (array $newMediaItem) use ($collectionName) {
+            ->map(function (array $newMediaItem) use ($collectionName, $mediaClass, $keyName) {
                 static $orderColumn = 1;
 
-                $mediaClass = config('medialibrary.media_model');
-                $currentMedia = $mediaClass::findOrFail($newMediaItem['id']);
+                $currentMedia = $mediaClass::findOrFail($newMediaItem[$keyName]);
 
                 if ($currentMedia->collection_name !== $collectionName) {
                     throw MediaCannotBeUpdated::doesNotBelongToCollection($collectionName, $currentMedia);
@@ -322,7 +348,7 @@ trait HasMediaTrait
     {
         $this->getMedia($collectionName)
             ->reject(function (Media $currentMediaItem) use ($newMediaArray) {
-                return in_array($currentMediaItem->id, array_column($newMediaArray, 'id'));
+                return in_array($currentMediaItem->getKey(), array_column($newMediaArray, $currentMediaItem->getKeyName()));
             })
             ->each->delete();
     }
@@ -370,7 +396,7 @@ trait HasMediaTrait
 
         $this->getMedia($collectionName)
             ->reject(function (Media $media) use ($excludedMedia) {
-                return $excludedMedia->where('id', $media->id)->count();
+                return $excludedMedia->where($media->getKeyName(), $media->getKey())->count();
             })
             ->each->delete();
 
@@ -392,7 +418,7 @@ trait HasMediaTrait
     public function deleteMedia($mediaId)
     {
         if ($mediaId instanceof Media) {
-            $mediaId = $mediaId->id;
+            $mediaId = $mediaId->getKey();
         }
 
         $media = $this->media->find($mediaId);
@@ -493,7 +519,7 @@ trait HasMediaTrait
 
     protected function guardAgainstInvalidMimeType(string $file, ...$allowedMimeTypes)
     {
-        $allowedMimeTypes = array_flatten($allowedMimeTypes);
+        $allowedMimeTypes = Arr::flatten($allowedMimeTypes);
 
         if (empty($allowedMimeTypes)) {
             return;

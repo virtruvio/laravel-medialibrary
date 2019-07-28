@@ -2,6 +2,42 @@
 
 All notable changes to `laravel-medialibrary` will be documented in this file
 
+## 7.7.0 - 2019-07-27
+
+- add `useFallbackMediaUrl` and `useFallbackMediaPath` to media collections
+
+## 7.6.9 - 2019-07-22
+
+- avoid using deprecated str and arr functions
+
+## 7.6.8 - 2019-07-22
+
+- fix for S3 Responsive Image URL Generator not using root
+
+## 7.6.7 - 2019-07-22
+
+- allow stable version of zipstream
+
+## 7.6.6 - 2019-07-22
+
+- fix absolute references to media.id
+
+## 7.6.5 - 2019-07-16
+
+- Support `jpeg` in `\Spatie\MediaLibrary\Conversion\Conversion::getResultExtension`
+
+## 7.6.4 - 2019-07-15
+
+- Add imagick as required extension, because of nested dependencies (#1480)
+
+## 7.6.3 - 2019-07-12
+
+- `--only-missing` for queued conversions (#1465)
+
+## 7.6.2 - 2019-07-11
+
+- Allow Uploading multiple files under the same name using array name (#1471)
+
 ## 7.6.0 - 2019-02-27
 
 - drop support for PHP 7.1

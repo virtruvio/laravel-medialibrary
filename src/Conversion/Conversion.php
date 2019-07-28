@@ -109,7 +109,7 @@ class Conversion
     /**
      * Set the manipulations for this conversion.
      *
-     * @param \Spatie\Image\Manipulations|closure $manipulations
+     * @param \Spatie\Image\Manipulations|\Closure $manipulations
      *
      * @return $this
      */
@@ -243,17 +243,16 @@ class Conversion
     */
     public function getResultExtension(string $originalFileExtension = ''): string
     {
+        $supportedFormats = ['jpg', 'pjpg', 'png', 'gif'];
+        if ($this->shouldKeepOriginalImageFormat() && in_array($originalFileExtension, $supportedFormats)) {
+            return $originalFileExtension;
+        }
 
-      $supportedFormats = ['jpg', 'pjpg', 'png', 'gif'];
-      if ($this->shouldKeepOriginalImageFormat() && in_array($originalFileExtension, $supportedFormats)) {
-        return $originalFileExtension;
-      }
+        if ($manipulationArgument = $this->manipulations->getManipulationArgument('format')) {
+            return $manipulationArgument;
+        }
 
-      if ($manipulationArgument = $this->manipulations->getManipulationArgument('format')) {
-        return $manipulationArgument;
-      }
-
-      return 'jpg';
+        return 'jpg';
     }
 
     public function getConversionFile(string $file): string
